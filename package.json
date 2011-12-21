@@ -18,7 +18,10 @@
     "hubot": "2.0.5",
     "hubot-scripts": "2.0.2",
     "optparse": "1.0.3",
-    "htmlparser": "1.7.3"
+    "htmlparser": "1.7.3",
+    "underscore": "1.2.3",
+    "underscore.string": "2.0.0",
+    "soupselect": "0.2.0"
   }
 }
 
