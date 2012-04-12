@@ -17,6 +17,11 @@ bart_api_stn = "http://api.bart.gov/api/stn.aspx?cmd=stns&key=#{bart_api_key}"
 #return
 
 module.exports = (robot) ->
+  robot.respond /test a/i, (msg) ->
+    strings = []
+    strings.push "one"
+    strings.push "two"
+    msg.send strings.join('\n')
 
   robot.respond /bart (stn|station|stations)/i, (msg) ->
     Parser = require("xml2js").Parser
@@ -28,9 +33,11 @@ module.exports = (robot) ->
         if json['message'] and json['message']['error'] and json['message']['error']['text']
           msg.send "BART API ERROR: #{json['message']['error']['text']} (#{json['message']['error']['details']})"
           return
-        msg.send "===== BART STATION LIST ====="
+        strings = []
+        strings.push "===== BART STATION LIST ====="
         for station in json['stations']['station']
-          msg.send "  #{station['abbr']} - #{station['name']} (#{station['address']}, #{station['city']}, #{station['state']} #{station['zipcode']})"
+          strings.push "  #{station['abbr']} - #{station['name']} (#{station['address']}, #{station['city']}, #{station['state']} #{station['zipcode']})"
+        msg.send strings.join('\n')
 
   robot.respond /bart (etd|me) (.*)/i, (msg) ->
     Parser = require("xml2js").Parser
@@ -42,8 +49,10 @@ module.exports = (robot) ->
         if json['message'] and json['message']['error'] and json['message']['error']['text']
           msg.send "BART API ERROR: #{json['message']['error']['text']} (#{json['message']['error']['details']})"
           return
-        msg.send "===== BART ESTIMATED DEPARTURES FOR #{json['station']['abbr'].toUpperCase()} (#{json['station']['name'].toUpperCase()}) ====="
+        strings = []
+        strings.push "===== BART ESTIMATED DEPARTURES FOR #{json['station']['abbr'].toUpperCase()} (#{json['station']['name'].toUpperCase()}) ====="
         for etd in json['station']['etd']
-          msg.send "  #{etd['abbreviation']} (#{etd['destination']})"
+          strings.push "  #{etd['abbreviation']} (#{etd['destination']})"
           for estimate in etd['estimate']
-            msg.send "    #{estimate['minutes']}m, #{estimate['length']} Car, #{estimate['direction']}bound, Platform #{estimate['platform']} (#{if estimate['bikeflag'] == 1 then 'Bikes OK' else 'NO Bikes'})"
+            strings.push "    #{estimate['minutes']}m, #{estimate['length']} Car, #{estimate['direction']}bound, Platform #{estimate['platform']} (#{if estimate['bikeflag'] == 1 then 'Bikes OK' else 'NO Bikes'})"
+        msg.send strings.join('\n')
