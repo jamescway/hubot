@@ -5,7 +5,8 @@
 # bart stn access <station> - Show Station Access Information
 # bart me <station> - Get Real-Time Estimated Departures
 
-util = require 'util'
+util = require("util")
+Parser = require("xml2js").Parser
 
 bart_api_key = "MW9S-E7SL-26DU-VV8V"
 bart_api_url = "http://api.bart.gov/api/"
@@ -20,57 +21,56 @@ bart_api_etd = "#{bart_api_url}etd.aspx?cmd=etd&key=#{bart_api_key}"
 bart_api_stn = "#{bart_api_url}stn.aspx?cmd=stns&key=#{bart_api_key}"
 
 # Get a BART stations info
-bart_api_info = "#{bart_api_url}stn.aspx?cmd=stninfo&key=#{bart_api_key}"
+bart_api_stn_info = "#{bart_api_url}stn.aspx?cmd=stninfo&key=#{bart_api_key}"
 
 # Get a BART stations access
-bart_api_info = "#{bart_api_url}stn.aspx?cmd=stnaccess&key=#{bart_api_key}"
+bart_api_stn_access = "#{bart_api_url}stn.aspx?cmd=stnaccess&key=#{bart_api_key}"
 
 
 module.exports = (robot) ->
 
   robot.respond /bart (stn|station|stations) (list|access|info)\s*(.*)?$/i, (msg) ->
-    Parser = require("xml2js").Parser
-    msg.http(bart_api_stn).get() (err, res, body) ->
-      if err
-        msg.send "BART API ERROR: #{err}"
-        return
-      (new Parser).parseString body, (err, json) ->
-        if json['message'] and json['message']['error'] and json['message']['error']['text']
-          msg.send "BART API ERROR: #{json['message']['error']['text']} (#{json['message']['error']['details']})"
-          return
-        action = msg.match[2]
-        strings = []
+    strings = []
+    action = msg.match[2]
+    stn = msg.match[3]
 
-        if action.match /list/i
+    if action.match /list/i
+      msg.http(bart_api_stn).get() (err, res, body) ->
+        if err
+          msg.send "BART API ERROR: #{err}"
+          return
+        (new Parser).parseString body, (err, json) ->
+          if json['message'] and json['message']['error'] and json['message']['error']['text']
+            msg.send "BART API ERROR: #{json['message']['error']['text']} (#{json['message']['error']['details']})"
+            return
+          strings = []
           strings.push "===== BART STATION LIST ====="
           for station in json['stations']['station']
             strings.push "  #{station['abbr']} - #{station['name']} (#{station['address']}, #{station['city']}, #{station['state']} #{station['zipcode']})"
+          msg.send strings.join('\n')
 
-        if action.match /info/i
-          station = msg.match[3]
-          if station
-            strings.push "info #{station}"
-          else
-            strings.push "ERROR: You must specify a station to get information for it!"
+    if action.match /info/i
+      if stn
+        strings.push "info #{stn}"
+      else
+        strings.push "ERROR: You must specify a station to get information for it!"
+      msg.send strings.join('\n')
 
-        if action.match /access/i
-          station = msg.match[3]
-          if station
-            strings.push "access #{station}"
-          else
-            strings.push "ERROR: You must specify a station to get access information for it!"
+    if action.match /access/i
+      if stn
+        strings.push "access #{stn}"
+      else
+        strings.push "ERROR: You must specify a station to get access information for it!"
+      msg.send strings.join('\n')
 
-        msg.send strings.join('\n')
 
 
   robot.respond /bart (ver|version)/i, (msg) ->
-    Parser = require("xml2js").Parser
     msg.http(bart_api_ver).get() (err, res, body) ->
       if err
         msg.send "BART API ERROR: #{err}"
         return
       (new Parser).parseString body, (err, json) ->
-        dump_json(msg, json)
         strings = []
         strings.push "API Version: #{json['apiVersion']}"
         strings.push "Copyright: #{json['copyright']}"
@@ -79,7 +79,6 @@ module.exports = (robot) ->
 
 
   robot.respond /bart (etd|me) (.*)/i, (msg) ->
-    Parser = require("xml2js").Parser
     msg.http("#{bart_api_etd}&orig=#{msg.match[2].toUpperCase()}").get() (err, res, body) ->
       if err
         msg.send "BART API ERROR: #{err}"
