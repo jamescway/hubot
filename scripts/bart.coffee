@@ -13,7 +13,7 @@ bart_api_etd = "http://api.bart.gov/api/etd.aspx?cmd=etd&key=#{bart_api_key}"
 bart_api_stn = "http://api.bart.gov/api/stn.aspx?cmd=stns&key=#{bart_api_key}"
 
 # JSON Dump
-#msg.send "  #{console.log(util.inspect(json, false, null))}"
+#msg.send "#{console.log(util.inspect(json, false, null))}"
 #return
 
 module.exports = (robot) ->
@@ -46,13 +46,38 @@ module.exports = (robot) ->
         msg.send "BART API ERROR: #{err}"
         return
       (new Parser).parseString body, (err, json) ->
-        if json['message'] and json['message']['error'] and json['message']['error']['text']
-          msg.send "BART API ERROR: #{json['message']['error']['text']} (#{json['message']['error']['details']})"
-          return
+        msg.send "#{console.log(util.inspect(json, false, null))}"
+
         strings = []
-        strings.push "===== BART ESTIMATED DEPARTURES FOR #{json['station']['abbr'].toUpperCase()} (#{json['station']['name'].toUpperCase()}) ====="
-        for etd in json['station']['etd']
-          strings.push "  #{etd['abbreviation']} (#{etd['destination']})"
-          for estimate in etd['estimate']
-            strings.push "    #{estimate['minutes']}m, #{estimate['length']} Car, #{estimate['direction']}bound, Platform #{estimate['platform']} (#{if estimate['bikeflag'] == 1 then 'Bikes OK' else 'NO Bikes'})"
+
+        if json['station']
+          strings.push "===== BART ESTIMATED DEPARTURES FOR #{json['station']['abbr'].toUpperCase()} (#{json['station']['name'].toUpperCase()}) ====="
+
+        if json['message'] and json['message']['error'] and json['message']['error']['text']
+          strings.push "ERROR: #{json['message']['error']['text']} (#{json['message']['error']['details']})"
+        else
+          if json['message'] and json['message']['warning']
+            strings.push "WARNING: #{json['message']['warning']}"
+          else
+            if json['station']['etd'] instanceof Array
+              for etd in json['station']['etd']
+                strings.push process_bart_etd etd
+            else
+              strings.push process_bart_etd json['station']['etd']
         msg.send strings.join('\n')
+
+
+process_bart_etd = (etd) ->
+  strings = []
+  strings.push "  #{etd['abbreviation']} (#{etd['destination']})"
+  if etd['estimate'] instanceof Array
+    for estimate in etd['estimate']
+      strings.push format_bart_etd estimate
+  else
+    strings.push format_bart_etd etd['estimate']
+  strings.join('\n')
+
+
+format_bart_etd = (estimate) ->
+  "    #{estimate['minutes']}#{if estimate['minutes'] != 'Leaving' then 'm' else ''}, #{estimate['length']} Car, #{estimate['direction']}bound, Platform #{estimate['platform']} (#{if estimate['bikeflag'] == 1 then 'Bikes OK' else 'NO Bikes'})"
+
