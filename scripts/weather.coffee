@@ -12,25 +12,25 @@ module.exports = (robot) ->
 
       city = body.getElementsByTagName("city")[0]
       return msg.send "Sorry, but I couldn't find that location." if not city or not city.getAttribute
-      
+
       city = city.getAttribute("data")
 
       strings = []
-      
+
       strings.push "The forecast for #{city} is as follows:\n"
       for element in body.getElementsByTagName("forecast_conditions")
         day = element.getElementsByTagName("day_of_week")[0].getAttribute("data")
-        
+
         if env.HUBOT_WEATHER_CELSIUS
           low = convertTempToCelsius(element.getElementsByTagName("low")[0].getAttribute("data")) + "ºC"
         else
           low = element.getElementsByTagName("low")[0].getAttribute("data") + "ºF"
-        
+
         if env.HUBOT_WEATHER_CELSIUS
           high = convertTempToCelsius(element.getElementsByTagName("high")[0].getAttribute("data")) + "ºC"
         else
           high = element.getElementsByTagName("high")[0].getAttribute("data") + "ºF"
-        
+
         condition = element.getElementsByTagName("condition")[0].getAttribute("data")
         strings.push "#{day}: #{condition} with a high of #{high} and a low of #{low}."
 
@@ -42,7 +42,7 @@ module.exports = (robot) ->
 
       city = body.getElementsByTagName("city")[0]
       return msg.send "Sorry, but you didn't specify a location." if not city or not city.getAttribute
-      
+
       city = city.getAttribute("data")
       currentCondition = body.getElementsByTagName("current_conditions")[0].getAttribute("data")
       conditions = body.getElementsByTagName("current_conditions")[0].getElementsByTagName("condition")[0].getAttribute("data")
@@ -52,7 +52,7 @@ module.exports = (robot) ->
         temp = body.getElementsByTagName("current_conditions")[0].getElementsByTagName("temp_c")[0].getAttribute("data") + "ºC"
       else
         temp = body.getElementsByTagName("current_conditions")[0].getElementsByTagName("temp_f")[0].getAttribute("data") + "ºF"
-      
+
       msg.send "Currently in #{city} it is #{conditions} and #{temp} with a humidity of #{humidity}.\n"
 
   getDom = (xml) ->

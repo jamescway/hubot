@@ -15,7 +15,7 @@ randimalMe = (msg, cb) ->
     .get() (err, res, body) ->
       console.log res.headers.location
       animalMe msg, res.headers.location, (location) ->
-        cb location 
+        cb location
 
 animalMe = (msg, location, cb) ->
   msg.http(location)

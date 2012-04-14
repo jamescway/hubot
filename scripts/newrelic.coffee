@@ -4,13 +4,13 @@
 #   HUBOT_NEWRELIC_ACCOUNT_ID = "<Account ID>"
 #   HUBOT_NEWRELIC_APP_ID     = "<Application ID>"
 #   HUBOT_NEWRELIC_API_KEY    = "<API Key>"
-# 
+#
 # How to find these settings:
 #   After signing into New Relic, select your application
 #   Given: https://rpm.newrelic.com/accounts/xxx/applications/yyy
 #     xxx is your Account ID and yyy is your App ID
 #   Account Settings > API + Web Integrations > API Access > "API key"
-# 
+#
 # TODO:
 #  - Allow hubot to display all app stats for a given account using the View Applications API call
 #    https://github.com/newrelic/newrelic_api
@@ -24,7 +24,7 @@ module.exports = (robot) ->
     appId     = process.env.HUBOT_NEWRELIC_APP_ID
     apiKey    = process.env.HUBOT_NEWRELIC_API_KEY
     Parser = require("xml2js").Parser
-    
+
     msg.http("https://rpm.newrelic.com/accounts/#{accountId}/applications/#{appId}/threshold_values.xml?api_key=#{apiKey}")
       .get() (err, res, body) ->
         if err
