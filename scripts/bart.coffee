@@ -8,9 +8,8 @@
 # bart bsa - Requests current advisory information.
 # bart elev - Requests current elevator infromation.
 
-util = require("util")
-Parser = require("xml2js").Parser
-#HtmlParser = require("htmlparser")
+xml2js = require('xml2js')
+util = require('util')
 
 bart_api_key = "MW9S-E7SL-26DU-VV8V"
 bart_api_url = "http://api.bart.gov/api/"
@@ -60,7 +59,7 @@ module.exports = (robot) ->
     strings = []
     msg.http(format_bart_api_url("bsa", "bsa")).get() (err, res, body) ->
       return msg.send format_http_error(err) if err
-      (new Parser).parseString body, (err, json) ->
+      (new xml2js.Parser()).parseString body, (err, json) ->
         dump_json(json)
 
         return msg.send format_bart_api_error(json) if is_bart_api_error(json)
@@ -82,7 +81,7 @@ module.exports = (robot) ->
     strings = []
     msg.http(format_bart_api_url("bsa", "elev")).get() (err, res, body) ->
       return msg.send format_http_error(err) if err
-      (new Parser).parseString body, (err, json) ->
+      (new xml2js.Parser()).parseString body, (err, json) ->
         dump_json(json)
 
         return msg.send format_bart_api_error(json) if is_bart_api_error(json)
@@ -108,7 +107,7 @@ module.exports = (robot) ->
     if action.match /list/i
       msg.http(format_bart_api_url("stn", "stns")).get() (err, res, body) ->
         return msg.send format_http_error(err) if err
-        (new Parser).parseString body, (err, json) ->
+        (new xml2js.Parser()).parseString body, (err, json) ->
           dump_json(json)
           return msg.send format_bart_api_error(json) if is_bart_api_error(json)
           return msg.send format_bart_api_warning(json) if is_bart_api_warning(json)
@@ -122,7 +121,7 @@ module.exports = (robot) ->
       return msg.send "ERROR: You must specify a station to get information for it!" if stn == ''
       msg.http(format_bart_api_url("stn", "stninfo", ["orig=#{msg.match[3].toUpperCase()}"])).get() (err, res, body) ->
         return msg.send format_http_error(err) if err
-        (new Parser).parseString body, (err, json) ->
+        (new xml2js.Parser()).parseString body, (err, json) ->
           dump_json(json)
           return msg.send format_bart_api_error(json) if is_bart_api_error(json)
           return msg.send format_bart_api_warning(json) if is_bart_api_warning(json)
@@ -154,7 +153,7 @@ module.exports = (robot) ->
       return msg.send "ERROR: You must specify a station to get access information for it!" if stn == ''
       msg.http(format_bart_api_url("stn", "stnaccess", ["orig=#{msg.match[3].toUpperCase()}"])).get() (err, res, body) ->
         return msg.send format_http_error(err) if err
-        (new Parser).parseString body, (err, json) ->
+        (new xml2js.Parser()).parseString body, (err, json) ->
           dump_json(json)
           return msg.send format_bart_api_error(json) if is_bart_api_error(json)
           return msg.send format_bart_api_warning(json) if is_bart_api_warning(json)
@@ -167,7 +166,7 @@ module.exports = (robot) ->
   robot.respond /bart (ver|version)/i, (msg) ->
     msg.http(format_bart_api_url("etd", "ver")).get() (err, res, body) ->
       return msg.send format_http_error(err) if err
-      (new Parser).parseString body, (err, json) ->
+      (new xml2js.Parser()).parseString body, (err, json) ->
         dump_json(json)
         return msg.send format_bart_api_error(json) if is_bart_api_error(json)
         return msg.send format_bart_api_warning(json) if is_bart_api_warning(json)
@@ -182,7 +181,7 @@ module.exports = (robot) ->
   robot.respond /bart (etd|me) (.*)/i, (msg) ->
     msg.http(format_bart_api_url("etd", "etd", ["orig=#{msg.match[2].toUpperCase()}"])).get() (err, res, body) ->
       return msg.send format_http_error(err) if err
-      (new Parser).parseString body, (err, json) ->
+      (new xml2js.Parser()).parseString body, (err, json) ->
         dump_json(json)
         return msg.send format_bart_api_error(json) if is_bart_api_error(json)
         return msg.send format_bart_api_warning(json) if is_bart_api_warning(json)
@@ -231,7 +230,7 @@ test_func '1', '2', (three, four) ->
   console.log("#{three}, #{four}")
   return
 
-
+HtmlParser = require("htmlparser")
 extract_text = (item) ->
   result = ''
   if item instanceof Array
