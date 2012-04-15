@@ -54,11 +54,14 @@ module.exports = (robot) ->
         return msg.send format_bart_api_warning(json) if is_bart_api_warning(json)
 
         strings.push "===== BART ADVISORY INFORMATION  ====="
-        if json['bsa'] instanceof Array
-          for bsa in json['bsa']
-            strings.push format_bart_bsa(bsa)
+        if json['bsa']
+          if json['bsa'] instanceof Array
+            for bsa in json['bsa']
+              strings.push format_bart_bsa(bsa)
+          else
+            strings.push format_bart_bsa(json['bsa'])
         else
-          strings.push format_bart_bsa(json['bsa'])
+          strings.push "No advisory information is available at this time!"
 
         msg.send strings.join('\n')
         return
@@ -74,11 +77,14 @@ module.exports = (robot) ->
         return msg.send format_bart_api_warning(json) if is_bart_api_warning(json)
 
         strings.push "===== BART ELEVATOR INFORMATION ====="
-        if json['bsa'] instanceof Array
-          for bsa in json['bsa']
-            strings.push format_bart_bsa(bsa)
+        if json['bsa']
+          if json['bsa'] instanceof Array
+            for bsa in json['bsa']
+              strings.push format_bart_bsa(bsa)
+          else
+            strings.push format_bart_bsa(json['bsa'])
         else
-          strings.push format_bart_bsa(json['bsa'])
+          strings.push "No elevator information is available at this time!"
 
         msg.send strings.join('\n')
         return
