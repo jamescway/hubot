@@ -53,7 +53,7 @@ module.exports = (robot) ->
         return msg.send format_bart_api_error(json) if is_bart_api_error(json)
         return msg.send format_bart_api_warning(json) if is_bart_api_warning(json)
 
-        strings.push "===== BART ADVISORY INFORMATION  ====="
+        strings.push "===== BART ADVISORY INFORMATION ====="
         if json['bsa']
           if json['bsa'] instanceof Array
             for bsa in json['bsa']
