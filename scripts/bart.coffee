@@ -84,10 +84,9 @@ module.exports = (robot) ->
           strings.push info['platform_info'] if info['platform_info']
           strings.push info['intro'] if info['intro']
           strings.push "Cross-Street: #{info['cross_street']}" if info['cross_street']
-          strings.push "#{info['name']} Food: #{info['food']}") if info['food']
+          strings.push "#{info['name']} Food: #{info['food']}" if info['food']
           strings.push "#{info['name']} Shopping: #{info['shopping']}" if info['shopping']
           strings.push "#{info['name']} Attractions: #{info['attraction']}" if info['attraction']
-
 
           msg.send strings.join('\n')
           return
