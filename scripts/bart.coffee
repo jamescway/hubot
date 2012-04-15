@@ -1,9 +1,12 @@
 # BART Transit Helper
 #
-# bart (stn|station|stations) list - List Stations
-# bart (stn|station|stations) info <station> - Show Station Information
-# bart (stn|station|stations) access <station> - Show Station Access Information
-# bart (etd|me) <station> - Get Real-Time Estimated Departures
+# bart (stn|stns|station|stations) list - Requests a list of all of the BART stations.
+# bart (stn|stns|station|stations) info <station> - Requests detailed information on the specified station.
+# bart (stn|stns|station|stations) access <station> - Requests access/neighborhood information for the specified station.
+# bart (etd|me) <station> - Requests current departure information.
+# bart ver - Requests current API version information.
+# bart bsa - Requests current advisory information.
+# bart elev - Requests current elevator infromation.
 
 util = require("util")
 Parser = require("xml2js").Parser
@@ -17,30 +20,70 @@ format_bart_api_url = (uri, cmd, add) ->
   console.log("format_bart_api_url(): '#{url}'")
   url
 
-
 format_http_error = (err) ->
   "HTTP ERROR: #{err}"
-
 
 is_bart_api_error = (json) ->
   return true if json['message'] and json['message']['error'] and json['message']['error']['text'] and json['message']['error']['text'] != ''
   return false
 
-format_bart_api_error = (json) ->
-  "BART API ERROR: #{json['message']['error']['text']} (#{json['message']['error']['details']})"
-
-
 is_bart_api_warning = (json) ->
   return true if json['message'] and json['message']['warning'] and json['message']['warning'] != ''
   return false
 
+format_bart_api_error = (json) ->
+  "BART API ERROR: #{json['message']['error']['text']} (#{json['message']['error']['details']})"
+
 format_bart_api_warning = (json) ->
   "BART API WARNING: #{json['message']['warning']}"
+
+format_bart_bsa = (bsa) ->
+  "  #{bsa['type']} ##{bsa['@']['id']} @ #{bsa['posted']}\n    #{bsa['description']}"
 
 
 module.exports = (robot) ->
 
-  robot.respond /bart (stn|station|stations) (list|access|info)\s*(.*)?$/i, (msg) ->
+  robot.respond /bart bsa/i, (msg) ->
+    strings = []
+    msg.http(format_bart_api_url("bsa", "bsa")).get() (err, res, body) ->
+      return msg.send format_http_error(err) if err
+      (new Parser).parseString body, (err, json) ->
+        dump_json(json)
+
+        return msg.send format_bart_api_error(json) if is_bart_api_error(json)
+        return msg.send format_bart_api_warning(json) if is_bart_api_warning(json)
+
+        strings.push "===== BART ADVISORY INFORMATION  ====="
+        if json['bsa'] instanceof Array
+          for bsa in json['bsa']
+            strings.push format_bart_bsa(bsa)
+        else
+          strings.push format_bart_bsa(json['bsa'])
+
+        msg.send strings.join('\n')
+        return
+
+  robot.respond /bart elev/i, (msg) ->
+    strings = []
+    msg.http(format_bart_api_url("bsa", "elev")).get() (err, res, body) ->
+      return msg.send format_http_error(err) if err
+      (new Parser).parseString body, (err, json) ->
+        dump_json(json)
+
+        return msg.send format_bart_api_error(json) if is_bart_api_error(json)
+        return msg.send format_bart_api_warning(json) if is_bart_api_warning(json)
+
+        strings.push "===== BART ELEVATOR INFORMATION ====="
+        if json['bsa'] instanceof Array
+          for bsa in json['bsa']
+            strings.push format_bart_bsa(bsa)
+        else
+          strings.push format_bart_bsa(json['bsa'])
+
+        msg.send strings.join('\n')
+        return
+
+  robot.respond /bart (stn|stns|station|stations) (list|access|info)\s*(.*)?$/i, (msg) ->
     strings = []
     action = msg.match[2]
     stn = msg.match[3]
@@ -49,6 +92,7 @@ module.exports = (robot) ->
       msg.http(format_bart_api_url("stn", "stns")).get() (err, res, body) ->
         return msg.send format_http_error(err) if err
         (new Parser).parseString body, (err, json) ->
+          dump_json(json)
           return msg.send format_bart_api_error(json) if is_bart_api_error(json)
           return msg.send format_bart_api_warning(json) if is_bart_api_warning(json)
 
@@ -63,6 +107,7 @@ module.exports = (robot) ->
       msg.http(format_bart_api_url("stn", "stninfo", ["orig=#{msg.match[3].toUpperCase()}"])).get() (err, res, body) ->
         return msg.send format_http_error(err) if err
         (new Parser).parseString body, (err, json) ->
+          dump_json(json)
           return msg.send format_bart_api_error(json) if is_bart_api_error(json)
           return msg.send format_bart_api_warning(json) if is_bart_api_warning(json)
 
@@ -96,15 +141,12 @@ module.exports = (robot) ->
       msg.http(format_bart_api_url("stn", "stnaccess", ["orig=#{msg.match[3].toUpperCase()}"])).get() (err, res, body) ->
         return msg.send format_http_error(err) if err
         (new Parser).parseString body, (err, json) ->
+          dump_json(json)
           return msg.send format_bart_api_error(json) if is_bart_api_error(json)
           return msg.send format_bart_api_warning(json) if is_bart_api_warning(json)
 
-          info = json['stations']['station']
-          dump_json(msg, info)
-
           strings = []
           strings.push "===== BART STATION ACCESS INFORMATION ====="
-          dump_json(msg, json)
 
           msg.send strings.join('\n')
           return
@@ -114,6 +156,7 @@ module.exports = (robot) ->
     msg.http(format_bart_api_url("etd", "ver")).get() (err, res, body) ->
       return msg.send format_http_error(err) if err
       (new Parser).parseString body, (err, json) ->
+        dump_json(json)
         return msg.send format_bart_api_error(json) if is_bart_api_error(json)
         return msg.send format_bart_api_warning(json) if is_bart_api_warning(json)
 
@@ -128,6 +171,7 @@ module.exports = (robot) ->
     msg.http(format_bart_api_url("etd", "etd", ["orig=#{msg.match[2].toUpperCase()}"])).get() (err, res, body) ->
       return msg.send format_http_error(err) if err
       (new Parser).parseString body, (err, json) ->
+        dump_json(json)
         return msg.send format_bart_api_error(json) if is_bart_api_error(json)
         return msg.send format_bart_api_warning(json) if is_bart_api_warning(json)
 
@@ -157,8 +201,8 @@ format_bart_etd = (estimate) ->
   "    #{estimate['minutes']}#{if estimate['minutes'] != 'Leaving' then 'm' else ''}, #{estimate['length']} Car, #{estimate['direction']}bound, Platform #{estimate['platform']} (#{if estimate['bikeflag'] == 1 then 'Bikes OK' else 'NO Bikes'})"
 
 
-dump_json = (msg, json) ->
-  msg.send "#{console.log(util.inspect(json, false, null))}"
+dump_json = (json) ->
+  console.log(util.inspect(json, false, null))
 
 
 ###
