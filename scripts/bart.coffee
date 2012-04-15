@@ -7,6 +7,7 @@
 
 util = require("util")
 Parser = require("xml2js").Parser
+#HtmlParser = require("htmlparser")
 
 bart_api_key = "MW9S-E7SL-26DU-VV8V"
 bart_api_url = "http://api.bart.gov/api/"
@@ -15,6 +16,7 @@ format_bart_api_url = (uri, cmd, add) ->
   url = "#{bart_api_url}#{uri}.aspx?cmd=#{cmd}&key=#{bart_api_key}#{if add then '&'+add.join('&') else ''}"
   console.log("format_bart_api_url(): '#{url}'")
   url
+
 
 format_http_error = (err) ->
   "HTTP ERROR: #{err}"
@@ -34,17 +36,6 @@ is_bart_api_warning = (json) ->
 
 format_bart_api_warning = (json) ->
   "BART API WARNING: #{json['message']['warning']}"
-
-
-###
-test_func = (one, two, cb) ->
-  console.log("#{one}, #{two}")
-  cb("three", "four")
-
-test_func '1', '2', (three, four) ->
-  console.log("#{three}, #{four}")
-  return
-###
 
 
 module.exports = (robot) ->
@@ -93,12 +84,12 @@ module.exports = (robot) ->
           strings.push info['platform_info'] if info['platform_info']
           strings.push info['intro'] if info['intro']
           strings.push "Cross-Street: #{info['cross_street']}" if info['cross_street']
+          strings.push "#{info['name']} Food: #{info['food']}") if info['food']
+          strings.push "#{info['name']} Shopping: #{info['shopping']}" if info['shopping']
+          strings.push "#{info['name']} Attractions: #{info['attraction']}" if info['attraction']
+
+
           msg.send strings.join('\n')
-
-          msg.send "#{info['name']} Food: #{info['food']}" if info['food']
-          msg.send "#{info['name']} Shopping: #{info['shopping']}" if info['shopping']
-          msg.send "#{info['name']} Attractions: #{info['attraction']}" if info['attraction']
-
           return
 
     if action.match /access/i
@@ -169,3 +160,50 @@ format_bart_etd = (estimate) ->
 
 dump_json = (msg, json) ->
   msg.send "#{console.log(util.inspect(json, false, null))}"
+
+
+###
+
+------------
+HOLDING AREA
+------------
+
+test_func = (one, two, cb) ->
+  console.log("#{one}, #{two}")
+  cb("three", "four")
+
+test_func '1', '2', (three, four) ->
+  console.log("#{three}, #{four}")
+  return
+
+
+extract_text = (item) ->
+  result = ''
+  if item instanceof Array
+    for i in item
+      result += extract_text(i)
+    return result
+
+  console.log(item)
+
+  # recurse if this is text
+  if item.type == 'text'
+    result += item.raw
+    if item.children
+      for child in item.children
+        console.log(child)
+        result += extract_text(child)
+
+  # don't recurse if this is an anchor tag
+  if item.type == 'tag' and item.name == 'a'
+    result += item.attribs.href
+
+  return result
+
+strip_html = (html) ->
+  handler = new HtmlParser.DefaultHandler()
+  parser = new HtmlParser.Parser(handler)
+  parser.parseComplete(html)
+  return extract_text(handler.dom)
+
+###
