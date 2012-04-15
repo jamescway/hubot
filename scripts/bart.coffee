@@ -43,10 +43,12 @@ format_bart_bsa = (bsa) ->
 
 module.exports = (robot) ->
 
-  robot.respond /bart/i, (msg) ->
+  robot.respond /bart$/i, (msg) ->
     cmds = robot.helpCommands()
     cmds = cmds.filter (cmd) -> cmd.match(new RegExp('bart'))
     msg.send cmds.join("\n")
+    return
+
 
   robot.respond /bart bsa/i, (msg) ->
     strings = []
@@ -67,9 +69,8 @@ module.exports = (robot) ->
             strings.push format_bart_bsa(json['bsa'])
         else
           strings.push "No advisory information is available at this time!"
-
         msg.send strings.join('\n')
-        return
+
 
   robot.respond /bart elev/i, (msg) ->
     strings = []
@@ -90,9 +91,8 @@ module.exports = (robot) ->
             strings.push format_bart_bsa(json['bsa'])
         else
           strings.push "No elevator information is available at this time!"
-
         msg.send strings.join('\n')
-        return
+
 
   robot.respond /bart (stn|stns|station|stations) (list|access|info)\s*(.*)?$/i, (msg) ->
     strings = []
@@ -111,7 +111,6 @@ module.exports = (robot) ->
           for station in json['stations']['station']
             strings.push "  #{station['abbr']} - #{station['name']} (#{station['address']}, #{station['city']}, #{station['state']} #{station['zipcode']})"
           msg.send strings.join('\n')
-          return
 
     if action.match /info/i
       return msg.send "ERROR: You must specify a station to get information for it!" if stn == ''
@@ -143,9 +142,7 @@ module.exports = (robot) ->
           strings.push "#{info['name']} Food: #{info['food']}" if info['food']
           strings.push "#{info['name']} Shopping: #{info['shopping']}" if info['shopping']
           strings.push "#{info['name']} Attractions: #{info['attraction']}" if info['attraction']
-
           msg.send strings.join('\n')
-          return
 
     if action.match /access/i
       return msg.send "ERROR: You must specify a station to get access information for it!" if stn == ''
@@ -158,9 +155,7 @@ module.exports = (robot) ->
 
           strings = []
           strings.push "===== BART STATION ACCESS INFORMATION ====="
-
           msg.send strings.join('\n')
-          return
 
 
   robot.respond /bart (ver|version)/i, (msg) ->
