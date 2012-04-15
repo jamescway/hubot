@@ -38,7 +38,13 @@ format_bart_api_warning = (json) ->
   "BART API WARNING: #{json['message']['warning']}"
 
 format_bart_bsa = (bsa) ->
-  "  #{bsa['type']} ##{bsa['@']['id']} @ #{bsa['posted']}\n    #{bsa['description']}"
+  message = []
+  message.push "#{bsa['type']}" if bsa['type']
+  message.push "##{bsa['@']['id']}" if bsa['@'] and bsa['@']['id']
+  message.push "@ #{bsa['posted']}" if bsa['posted']
+  message.push "\n    " if message.length > 0
+  message.push "#{bsa['description']}"
+  "  #{message.join(' ')}"
 
 
 module.exports = (robot) ->
