@@ -11,21 +11,6 @@ Parser = require("xml2js").Parser
 bart_api_key = "MW9S-E7SL-26DU-VV8V"
 bart_api_url = "http://api.bart.gov/api/"
 
-# API Version Information
-bart_api_ver = "#{bart_api_url}etd.aspx?cmd=ver&key=#{bart_api_key}"
-
-# Get Real-Time Estimates
-bart_api_etd = "#{bart_api_url}etd.aspx?cmd=etd&key=#{bart_api_key}"
-
-# Get a list of all BART stations
-bart_api_stn = "#{bart_api_url}stn.aspx?cmd=stns&key=#{bart_api_key}"
-
-# Get a BART stations info
-bart_api_stn_info = "#{bart_api_url}stn.aspx?cmd=stninfo&key=#{bart_api_key}"
-
-# Get a BART stations access
-bart_api_stn_access = "#{bart_api_url}stn.aspx?cmd=stnaccess&key=#{bart_api_key}"
-
 format_bart_api_url = (uri, cmd, add) ->
   url = "#{bart_api_url}#{uri}.aspx?cmd=#{cmd}&key=#{bart_api_key}#{if add then '&'+add.join('&') else ''}"
   console.log("format_bart_api_url(): '#{url}'")
@@ -108,11 +93,12 @@ module.exports = (robot) ->
           strings.push info['platform_info'] if info['platform_info']
           strings.push info['intro'] if info['intro']
           strings.push "Cross-Street: #{info['cross_street']}" if info['cross_street']
-          strings.push "Food: #{info['food']}" if info['food']
-          strings.push "Shopping: #{info['shopping']}" if info['shopping']
-          strings.push "Attractions: #{info['attraction']}" if info['attraction']
-
           msg.send strings.join('\n')
+
+          msg.send "#{info['name']} Food: #{info['food']}" if info['food']
+          msg.send "#{info['name']} Shopping: #{info['shopping']}" if info['shopping']
+          msg.send "#{info['name']} Attractions: #{info['attraction']}" if info['attraction']
+
           return
 
     if action.match /access/i
