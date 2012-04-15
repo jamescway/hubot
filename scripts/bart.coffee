@@ -43,6 +43,11 @@ format_bart_bsa = (bsa) ->
 
 module.exports = (robot) ->
 
+  robot.respond /bart/i, (msg) ->
+    cmds = robot.helpCommands()
+    cmds = cmds.filter (cmd) -> cmd.match(new RegExp('bart'))
+    msg.send cmds.join("\n")
+
   robot.respond /bart bsa/i, (msg) ->
     strings = []
     msg.http(format_bart_api_url("bsa", "bsa")).get() (err, res, body) ->
