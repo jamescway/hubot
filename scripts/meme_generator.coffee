@@ -28,6 +28,8 @@
 # one does not simply <text> - Generates One Does Not Simply ...
 #
 # yoda <text>, <text> - Generates Yoda
+#
+# <text> you can't explain that - Generates Bill O'Reilly
 
 module.exports = (robot) ->
   robot.respond /Y U NO (.+)/i, (msg) ->
@@ -86,6 +88,10 @@ module.exports = (robot) ->
 
   robot.respond /yoda (.*), (.*)/i, (msg) ->
 	  memeGenerator msg, 629, 963, msg.match[1], msg.match[2], (url) ->
+      msg.send url
+
+  robot.respond /(.*) (you can't explain that)/i, (msg) ->
+	  memeGenerator msg, 9623, 439720, msg.match[1], msg.match[2], (url) ->
       msg.send url
 
 memeGenerator = (msg, generatorID, imageID, text0, text1, callback) ->
