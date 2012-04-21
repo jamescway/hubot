@@ -20,6 +20,8 @@
 # Not sure if <text> or <text> - Generates Futurama Fry
 #
 # Yo dawg <text> so <text> - Generates Yo Dawg
+#
+# If <text>, <text>? - Generates philosoraptor
 
 module.exports = (robot) ->
   robot.respond /Y U NO (.+)/i, (msg) ->
@@ -62,6 +64,10 @@ module.exports = (robot) ->
 
   robot.respond /(YO DAWG .*) (SO .*)/i, (msg) ->
 	  memeGenerator msg, 79, 108785, msg.match[1], msg.match[2], (url) ->
+      msg.send url
+
+  robot.respond /(IF .*), (.*\?)/i, (msg) ->
+	  memeGenerator msg, 17, 984, msg.match[1], msg.match[2], (url) ->
       msg.send url
 
 memeGenerator = (msg, generatorID, imageID, text0, text1, callback) ->
