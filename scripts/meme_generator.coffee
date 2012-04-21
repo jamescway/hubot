@@ -30,6 +30,8 @@
 # yoda <text>, <text> - Generates Yoda
 #
 # <text> you can't explain that - Generates Bill O'Reilly
+#
+#some say <thing1>, some say <thing2> - Generates the Stig
 
 module.exports = (robot) ->
   robot.respond /Y U NO (.+)/i, (msg) ->
@@ -92,6 +94,10 @@ module.exports = (robot) ->
 
   robot.respond /(.*) (you can't explain that)/i, (msg) ->
 	  memeGenerator msg, 9623, 439720, msg.match[1], msg.match[2], (url) ->
+      msg.send url
+
+  robot.respond /some say (.*) (all we know he's called the STIG)/i, (msg) ->
+    memeGenerator msg, 11480, 1121, msg.match[1], msg.match[2], (url) ->
       msg.send url
 
 memeGenerator = (msg, generatorID, imageID, text0, text1, callback) ->
