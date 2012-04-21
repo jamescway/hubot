@@ -26,6 +26,8 @@
 # scumbag <text>, <text> - Generates Scumbag Steve
 #
 # one does not simply <text> - Generates One Does Not Simply ...
+#
+# yoda <text>, <text> - Generates Yoda
 
 module.exports = (robot) ->
   robot.respond /Y U NO (.+)/i, (msg) ->
@@ -80,6 +82,10 @@ module.exports = (robot) ->
 
   robot.respond /(one does not simply) (.*)/i, (msg) ->
 	  memeGenerator msg, 689854, 3291562, msg.match[1], msg.match[2], (url) ->
+      msg.send url
+
+  robot.respond /yoda (.*), (.*)/i, (msg) ->
+	  memeGenerator msg, 629, 963, msg.match[1], msg.match[2], (url) ->
       msg.send url
 
 memeGenerator = (msg, generatorID, imageID, text0, text1, callback) ->
