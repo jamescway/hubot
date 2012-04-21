@@ -31,7 +31,7 @@
 #
 # <text> you can't explain that - Generates Bill O'Reilly
 #
-#some say <thing> - Generates the Stig
+# some say <text> all we know he's called the stig - Generates the Stig
 
 module.exports = (robot) ->
   robot.respond /Y U NO (.+)/i, (msg) ->
@@ -96,7 +96,7 @@ module.exports = (robot) ->
 	  memeGenerator msg, 9623, 439720, msg.match[1], msg.match[2], (url) ->
       msg.send url
 
-  robot.respond /some say (.*) (all we know he's called the STIG)/i, (msg) ->
+  robot.respond /(some say .*) (all we know he's called the stig)/i, (msg) ->
     memeGenerator msg, 11480, 1121, msg.match[1], msg.match[2], (url) ->
       msg.send url
 
