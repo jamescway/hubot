@@ -31,7 +31,7 @@
 #
 # <text> you can't explain that - Generates Bill O'Reilly
 #
-#some say <thing1>, some say <thing2> - Generates the Stig
+#some say <thing> - Generates the Stig
 
 module.exports = (robot) ->
   robot.respond /Y U NO (.+)/i, (msg) ->
