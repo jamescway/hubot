@@ -34,10 +34,8 @@
 # some say <text> all we know he's called the stig - Generates the Stig
 
 module.exports = (robot) ->
-  robot.respond /Y U NO (.+)/i, (msg) ->
-    caption = msg.match[1] || ""
-
-    memeGenerator msg, 2, 166088, "Y U NO", caption, (url) ->
+  robot.respond /(.*) (Y U NO .+)/i, (msg) ->
+    memeGenerator msg, 2, 166088, msg.match[1], msg.match[2], (url) ->
       msg.send url
 
   robot.respond /(I DON'?T ALWAYS .*) (BUT WHEN I DO,? .*)/i, (msg) ->
