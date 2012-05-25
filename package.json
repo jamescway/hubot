@@ -20,6 +20,7 @@
     "jsdom": "0.2.10",
     "xml2js": "0.1.13",
     "optparse": "1.0.3",
+    "githubot": "0.1.5",
     "htmlparser": "1.7.3",
     "soupselect": "0.2.0",
     "underscore": "1.2.3",
