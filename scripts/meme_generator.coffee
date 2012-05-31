@@ -32,6 +32,8 @@
 # <text> you can't explain that - Generates Bill O'Reilly
 #
 # some say <text> all we know he's called the stig - Generates the Stig
+#
+# there's no <text> in <text> - Generates there's no crying in baseball meme
 
 module.exports = (robot) ->
   robot.respond /(.*) (Y U NO .+)/i, (msg) ->
@@ -97,6 +99,10 @@ module.exports = (robot) ->
   robot.respond /(some say .*) (all we know he's called the stig)/i, (msg) ->
     memeGenerator msg, 11480, 1121, msg.match[1], msg.match[2], (url) ->
       msg.send url
+
+  robot.respond /((there's|theres) no (.+)) (in (.+))/i, (msg) ->
+     memeGenerator msg, 1099784, 4728478, msg.match[1], msg.match[4], (url) ->
+       msg.send url
 
 memeGenerator = (msg, generatorID, imageID, text0, text1, callback) ->
   username = process.env.HUBOT_MEMEGEN_USERNAME
