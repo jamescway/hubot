@@ -107,7 +107,7 @@ module.exports = (robot) ->
       msg.send url
 
   robot.respond /(.*), (you're (going to|gonna) have a bad time)/i, (msg) ->
-    memeGenerator msg, 825296, 3786537, msg.match[1], msg.match[2], (url)
+    memeGenerator msg, 825296, 3786537, msg.match[1], msg.match[2], (url) ->
       msg.send url
 
 memeGenerator = (msg, generatorID, imageID, text0, text1, callback) ->
