@@ -5,8 +5,6 @@
 #
 # I don't always <something> but when i do <text> - Generates The Most Interesting man in the World
 #
-# <text> ORLY?               - Generates the ORLY? owl with the top caption of <text>
-#
 # <text> (SUCCESS|NAILED IT) - Generates success kid with the top caption of <text>
 #
 # <text> ALL the <things>    - Generates ALL THE THINGS
@@ -44,10 +42,6 @@ module.exports = (robot) ->
 
   robot.respond /(I DON'?T ALWAYS .*) (BUT WHEN I DO,? .*)/i, (msg) ->
     memeGenerator msg, 74, 2485, msg.match[1], msg.match[2], (url) ->
-      msg.send url
-
-  robot.respond /(.*)(O\s?RLY\??.*)/i, (msg) ->
-    memeGenerator msg, 920, 117049, msg.match[1], msg.match[2], (url) ->
       msg.send url
 
   robot.respond /(.*)(SUCCESS|NAILED IT.*)/i, (msg) ->
@@ -104,6 +98,10 @@ module.exports = (robot) ->
 
   robot.respond /((there's|theres) no (.+)) (in (.+))/i, (msg) ->
     memeGenerator msg, 1099784, 4728478, msg.match[1], msg.match[4], (url) ->
+      msg.send url
+
+  robot.respond /(brace (yourself|yourselves)(""|,)) (.*)/i, (msg) ->
+    memeGenerator msg, 121854, 1611300, msg.match[1], msg.match[2], (url) ->
       msg.send url
 
   robot.respond /(.*), (you're (going to|gonna) have a bad time)/i, (msg) ->
