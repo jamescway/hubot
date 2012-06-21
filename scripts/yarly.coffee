@@ -2,7 +2,7 @@
 # Proper reply to "ORLY?"
 
 yarly = [
-	"http://files.myopera.com/Sk8r644/albums/510337/Ya%20Rly.jpg"
+	"http://members.optusnet.com.au/mollypig/yarly.JPG"
 ]
 
 module.exports = (robot) ->
