@@ -7,4 +7,4 @@ yarly = [
 
 module.exports = (robot) ->
   robot.hear /.*(yarly).*/i, (msg) ->
-    msg.send yarly
+    msg.send msg.random yarly
