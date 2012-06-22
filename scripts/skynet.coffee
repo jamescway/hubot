@@ -3,6 +3,7 @@
 # blitzkrieg <device> - Fires ALL THE MISSILES.
 # fire <device> - Fires a missile from <device>.
 # kill <person> - Fires a missle at <person>.
+# reset <device> - Resets <device> to starting position.
 # move <device> <direction> <value> - Moves the device in a certain direction.
 
 redis = require("redis-url").connect(process.env.REDISTOGO_URL)
@@ -28,6 +29,12 @@ send = (device, instructions) ->
   redis.publish device, message
 
 module.exports = (robot) ->
+  robot.respond /reset (.+)/i, (msg) ->
+    device = msg.match[1]
+    command = ["zero", 0]
+
+    send device, [command]
+
   robot.respond /move (.+) (up|down|right|left) (\d+)/i, (msg) ->
     device = msg.match[1]
     direction = msg.match[2]
