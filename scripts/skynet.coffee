@@ -1,10 +1,17 @@
 # Fires missiles at people.
 #
-# fire <device> - Fires ALL THE MISSLES.
+# blitzkrieg <device> - Fires ALL THE MISSILES.
+# fire <device> - Fires a missile from <device>.
 # kill <person> - Fires a missle at <person>.
 # move <device> <direction> <value> - Moves the device in a certain direction.
 
 redis = require("redis-url").connect(process.env.REDISTOGO_URL)
+
+insanity = [
+  "http://i290.photobucket.com/albums/ll247/Tijuana22/Nooooooo.jpg",
+  "http://www.colinfahey.com/funny_images/haha_quaker_nuclear_launch_detected.jpg",
+  "http://4.bp.blogspot.com/-VT9-iZgON1c/TgDA0YOspqI/AAAAAAAAHtI/PPmevY6T-K4/s1600/Nuclear%2BLaunch%2BDetected.png"
+]
 
 people =
   sam: 
@@ -27,6 +34,15 @@ module.exports = (robot) ->
     value = parseInt(msg.match[3], 10)
 
     command = [direction, value]
+
+    send device, [command]
+
+  robot.respond /blitzkrieg (.+)/i, (msg) ->
+    device = msg.match[1]
+    command = ["fire", 4]
+
+    if device == "all"
+      msg.send msg.random insanity
 
     send device, [command]
 
