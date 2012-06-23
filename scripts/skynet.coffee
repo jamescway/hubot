@@ -18,9 +18,108 @@ people =
   sam: 
     ["godzilla",
       [
-        ["right", 3250],
-        ["up", 540],
-        ["fire", 4]
+        ["right", 6000],
+        ["up", 400],
+        ["fire", 1]
+      ]
+    ]
+
+  chris:
+    ["godzilla",
+      [
+        ["right", 1700],
+        ["up", 100],
+        ["fire", 1],
+      ]
+    ]
+
+  kevin:
+    ["godzilla",
+      [
+        ["right", 2000],
+        ["up", 400],
+        ["fire", 1],
+      ]
+    ]    
+
+  zac:
+    ["godzilla",
+      [
+        ["right", 700],
+        ["up", 250],
+        ["fire", 1],
+      ]
+    ]
+
+  mabel:
+    ["godzilla",
+      [
+        ["right", 25],
+        ["up", 550],
+        ["fire", 1],
+      ]
+    ]
+
+  jim:
+    ["godzilla",
+      [
+        ["right", 3000],
+        ["up", 250],
+        ["fire", 1],
+      ]
+    ]
+
+  james:
+    ["godzilla",
+      [
+        ["right", 1100],
+        ["up", 300],
+        ["fire", 1],
+      ]
+    ]
+
+  max:
+    ["godzilla",
+      [
+        ["right", 3650],
+        ["up", 350],
+        ["fire", 1],
+      ]
+    ]
+
+  rick:
+    ["godzilla",
+      [
+        ["right", 2100],
+        ["up", 1000],
+        ["fire", 2],
+      ]
+    ]
+
+  donovan:
+    ["godzilla",
+      [
+        ["right", 25],
+        ["up", 850],
+        ["fire", 1],
+      ]
+    ]
+
+  ganit:
+    ["godzilla",
+      [
+        ["right", 500],
+        ["up", 500],
+        ["fire", 1],
+      ]
+    ]
+
+  shashank:
+    ["godzilla",
+      [
+        ["right", 25],
+        ["up", 850],
+        ["fire", 1],
       ]
     ]
 
@@ -56,6 +155,7 @@ module.exports = (robot) ->
   robot.respond /fire (.+)/i, (msg) ->
     device = msg.match[1]
     command = ["fire", 1]
+
 
     send device, [command]
 

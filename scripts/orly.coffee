@@ -9,6 +9,6 @@ orly = [
 	"http://anongallery.org/img/3/5/o-rly-orly-owl.jpg"
 ]
 
-module.exports = (robot) ->
+module.exports = (robot) ->	
   robot.hear /.*(ORLY).*/i, (msg) ->
     msg.send msg.random orly
