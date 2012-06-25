@@ -18,7 +18,7 @@ people =
   sam: 
     ["godzilla",
       [
-        ["right", 6000],
+        ["right", 7000],
         ["up", 400],
         ["fire", 1]
       ]
@@ -90,7 +90,7 @@ people =
   rick:
     ["godzilla",
       [
-        ["right", 2100],
+        ["right", 2300],
         ["up", 1000],
         ["fire", 2],
       ]
@@ -120,6 +120,15 @@ people =
         ["right", 25],
         ["up", 850],
         ["fire", 1],
+      ]
+    ]
+
+  matt
+    ["godzilla"
+      [
+        ["right", 6400],
+        ["up", 400],
+        ["fire", 1]
       ]
     ]
 
