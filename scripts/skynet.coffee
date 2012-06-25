@@ -123,7 +123,7 @@ people =
       ]
     ]
 
-  matt
+  matt:
     ["godzilla"
       [
         ["right", 6400],
