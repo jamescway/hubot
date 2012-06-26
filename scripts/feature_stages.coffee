@@ -5,10 +5,9 @@
 module.exports = (robot) ->
   robot.respond /(f\d)$/i, (msg) ->
     url = process.env.HUBOT_FEATURE_STAGE.replace(/#{name}/, msg.match[1]) + "/site/sha"
-    msg.send(url)
-    # msg.http()
-    #   .get() (err, res, body) ->
-    #     if err
-    #       msg.send("Could not complete your request.")
-    #     else
-    #       msg.send(body)
+    msg.http(url)
+      .get() (err, res, body) ->
+        if err
+          msg.send("Could not complete your request.")
+        else
+          msg.send(body)
