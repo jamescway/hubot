@@ -9,7 +9,6 @@
   "github-issues.coffee",
   "janky.coffee",
   "newrelic.coffee",
-  "ping.coffee",
   "rubygems.coffee",
   "sudo.coffee",
   "tell.coffee",
