@@ -131,10 +131,11 @@ people =
         ["fire", 1]
       ]
     ]
+
   alex:
-    ["godzilla"
+    ["mothra"
       [
-        ["right", 6400],
+        ["right", 1500],
         ["up", 400],
         ["fire", 1]
       ]
