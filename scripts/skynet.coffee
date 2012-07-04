@@ -131,6 +131,14 @@ people =
         ["fire", 1]
       ]
     ]
+  alex:
+    ["godzilla"
+      [
+        ["right", 6400],
+        ["up", 400],
+        ["fire", 1]
+      ]
+    ]
 
 send = (device, instructions) ->
   message = JSON.stringify instructions
