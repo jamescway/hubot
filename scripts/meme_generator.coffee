@@ -103,7 +103,7 @@ module.exports = (robot) ->
       msg.send url
 
   robot.respond /(brace (yourself|yourselves)(""|,)) (.*)/i, (msg) ->
-    memeGenerator msg, 121854, 1611300, msg.match[1], msg.match[2], (url) ->
+    memeGenerator msg, 121854, 1611300, msg.match[1], msg.match[4], (url) ->
       msg.send url
 
   robot.respond /(.*), (you're (going to|gonna) have a bad time)/i, (msg) ->
