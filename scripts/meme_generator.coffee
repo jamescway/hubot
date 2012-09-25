@@ -34,6 +34,8 @@
 # there's no <text> in <text> - Generates there's no crying in baseball meme
 #
 # <test>, you're going to/gonna have a bad time - Generates bad time ski instructor
+#
+# imagine a world <text> - Generates Spongebob meme
 
 module.exports = (robot) ->
   robot.respond /(.*) (Y U NO .+)/i, (msg) ->
@@ -106,6 +108,10 @@ module.exports = (robot) ->
 
   robot.respond /(.*), (you're (going to|gonna) have a bad time)/i, (msg) ->
     memeGenerator msg, 825296, 3786537, msg.match[1], msg.match[2], (url) ->
+      msg.send url
+
+  robot.respond /(imagine a world).* (.*)/i, (msg) ->
+    memeGenerator msg, 9603, 39519, msg.match[1], msg.match[2], (url) ->
       msg.send url
 
 memeGenerator = (msg, generatorID, imageID, text0, text1, callback) ->
