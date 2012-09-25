@@ -110,10 +110,10 @@ module.exports = (robot) ->
     memeGenerator msg, 825296, 3786537, msg.match[1], msg.match[2], (url) ->
       msg.send url
 
-  robot.respond /(imagine a world).* (.*)/i, (msg) ->
+  robot.respond /(imagine a world).? (.*)/i, (msg) ->
     memeGenerator msg, 9603, 39519, msg.match[1], msg.match[2], (url) ->
       msg.send url
-
+ 
 memeGenerator = (msg, generatorID, imageID, text0, text1, callback) ->
   username = process.env.HUBOT_MEMEGEN_USERNAME
   password = process.env.HUBOT_MEMEGEN_PASSWORD
