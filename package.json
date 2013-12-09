@@ -19,6 +19,8 @@
   },
 
   "dependencies": {
+    "hubot": "2.2.0",
+    "nodepie": "0.4.x",
     "util" : "0.4.9",
     "jsdom": "0.2.10",
     "xml2js": "0.1.13",
