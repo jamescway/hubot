@@ -1,1 +1,1 @@
-app: bin/hubot -a campfire -n Devbot
+app: bin/hubot -a campfire -n cosmic_ac 
