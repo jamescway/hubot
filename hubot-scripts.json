@@ -1,19 +1,4 @@
 [
-  "adult.coffee",
-  "animal.coffee",
-  "ascii.coffee",
-  "bees.coffee",
-  "botsnack.coffee",
-  "dilbert.coffee",
-  "eight-ball.coffee",
-  "github-issues.coffee",
-  "janky.coffee",
-  "newrelic.coffee",
-  "rubygems.coffee",
-  "sudo.coffee",
-  "tell.coffee",
-  "weather.coffee",
-  "wikipedia.coffee",
-  "xkcd.coffee",
-  "xmas.js"
+  "ping.coffee",
+  "help.coffee"
 ]
